@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Enviar minha localização</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: sans-serif; padding: 20px; text-align: center; }
+    button { font-size: 18px; padding: 10px 20px; }
+  </style>
+</head>
+<body>
+  <h2>Compartilhar Localização</h2>
+  <p>Clique no botão abaixo e permita o acesso à sua localização para receber a análise do risco de enchente na sua área.</p>
+  <button onclick="enviar()">Enviar minha localização</button>
+
+  <script>
+    function enviar() {
+      if (!navigator.geolocation) {
+        alert("Geolocalização não é suportada pelo seu navegador.");
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        const userId = new URLSearchParams(window.location.search).get("id") || "desconhecido";
+
+        await fetch("https://painel.novusia.chat/webhook/receber-localizacao", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ latitude: lat, longitude: lon, user_id: userId })
+        });
+
+        alert("Localização enviada com sucesso! Você receberá uma resposta em instantes.");
+      }, () => {
+        alert("Não foi possível obter sua localização.");
+      });
+    }
+  </script>
+</body>
+</html>
