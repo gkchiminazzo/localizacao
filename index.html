@@ -26,7 +26,7 @@
         const lon = position.coords.longitude;
         const userId = new URLSearchParams(window.location.search).get("id") || "desconhecido";
 
-        await fetch("https://painel.novusia.chat/webhook/receber-localizacao", {
+        await fetch("https://webhook.novusia.chat/webhook/get-location", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ latitude: lat, longitude: lon, user_id: userId })
